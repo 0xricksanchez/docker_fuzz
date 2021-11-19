@@ -26,23 +26,17 @@ RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
     && apt-get clean \
     && echo y | unminimize
 
-# Create a sensible user
-RUN useradd --create-home --groups sudo --shell $(which zsh) pleb && echo "pleb ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
 # Make sure directory exists
 RUN mkdir /var/run/sshd
 
 # Remaining installations can be done from here
-WORKDIR /home/pleb/
-USER pleb
-RUN chown -R pleb:pleb /home/pleb/ && mkdir tools
-WORKDIR /home/pleb/tools/
+RUN mkdir -p /home/root/tools
+WORKDIR /home/root/tools/
 
 # Install pwndbg for debugging 
 RUN git clone --depth=1 https://github.com/pwndbg/pwndbg && cd pwndbg && chmod +x setup.sh && echo y | ./setup.sh && cd ../
 
 # Install honggfuzz
-USER root
 RUN apt-get -y update && apt-get install -y make pkg-config libipt-dev libunwind8-dev binutils-dev \
     && git clone --depth=1 https://github.com/google/honggfuzz.git && cd honggfuzz && make && sudo make install && cd ../ 
 
@@ -68,20 +62,16 @@ RUN apt-get install -y ccache cmake make g++-multilib gdb pkg-config coreutils p
     CC=clang CXX=clang++ cmake -G Ninja ../ && cmake --build . && cmake --build . --target install
 
 # Install crashwalk and exploitable
-USER pleb
 WORKDIR /tmp
 ARG VERSION=1.17.3
 ARG MACHINE=amd64
 RUN wget https://golang.org/dl/go$VERSION.linux-$MACHINE.tar.gz && tar -xf "go${VERSION}.linux-${MACHINE}.tar.gz" && sudo mv go /usr/local/ 
 ENV GOPATH=$HOME/go
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-WORKDIR /home/pleb/tools
-ARG EXPL=/home/pleb/src/exploitable
-USER root
-WORKDIR /home/pleb/tools
-RUN git clone --depth=1 https://github.com/jfoote/exploitable.git $EXPL && echo "/home/pleb/src/exploitable/exploitable/exploitable.py" >> /home/pleb/.gdbinit \
+WORKDIR /home/root/tools
+ARG EXPL=/home/root/src/exploitable
+RUN git clone --depth=1 https://github.com/jfoote/exploitable.git $EXPL && echo "source /home/root/src/exploitable/exploitable/exploitable.py" >> ~/.gdbinit \
     && go get -u github.com/bnagy/crashwalk/cmd/...
-USER pleb
 
 # Let's ditch bash for zsh
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)"
