@@ -30,10 +30,10 @@ docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined bfuzz
 docker run -itv "/host_dir:/container_dir" --cap-add=SYS_PTRACE --security-opt seccomp=unconfined bfuzz
 ```
 
-or you can even pull it from docker hub:
+or you can even pull the container directly from docker hub:
 
 ```bash
-docker pull 0x434b:bfuzz
+docker pull 0x434b/bfuzz
 docker run -itv "$(pwd)/host_dir:/container_dir" --cap-add=SYS_PTRACE --security-opt seccomp=unconfined 0x434b:bfuzz
 ```
 
