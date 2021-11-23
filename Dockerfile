@@ -10,7 +10,7 @@ RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
                        rsync bison gperf autoconf libtool libtool-bin texinfo gettext flex openssh-server ncat neovim \
                        apt-utils tmux htop man manpages-posix-dev gdb zsh python-is-python3 libpixman-1-dev gcc gdb-multiarch \
                        gcc-9-plugin-dev cgroup-tools autopoint pkg-config libz-dev libssl-dev liblzma-dev libcrypto++-dev \
-                       libbz2-dev cmake make binutils-dev ninja-build \
+                       libbz2-dev cmake make binutils-dev ninja-build ltrace strace uftrace valgrind lcov \
     && apt-get install -y -o Dpkg::Options::="--force-overwrite" bat ripgrep hexyl httpie \
     && ln -s $(which batcat) /usr/bin/bat \
     && apt-get install -y python3.9 python3.9-dev libpython3.9 libpython3.9-dev \
@@ -49,6 +49,9 @@ RUN apt-get install -y gcc-$(gcc --version|head -n1|sed 's/.* //'|sed 's/\..*//'
     && update-alternatives --install /usr/bin/llvm-cov        llvm-cov $(which llvm-cov-13) 1 \
     && update-alternatives --install /usr/bin/llvm-profdata   llvm-profdata $(which llvm-profdata-13) 1 \
     && git clone --depth=1 https://github.com/AFLplusplus/AFLplusplus && cd AFLplusplus && make distrib && make install && cd ../
+
+# Install AFL-cov
+RUN git clone --depth=1 https://github.com/vanhauser-thc/afl-cov.git
 
 # Install radamsa
 RUN git clone --depth=1 https://gitlab.com/akihe/radamsa.git && cd radamsa && make && make install && cd ../

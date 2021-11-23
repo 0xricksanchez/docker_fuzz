@@ -5,10 +5,11 @@ It has a bunch of tools installed to get you started.
 List of tools:
 
 * AFL++ (full)
+    * AFL-cov
 * libfuzzer
 * honggfuzz
 * radamsa
-* gdb with pwndbg
+* gdb(-multiarch) with pwndbg
 * rr
 * crashwalk
 * exploitable
@@ -20,6 +21,8 @@ List of tools:
 * exposed ssh server
 * go
 * python3
+* valgrind
+* strace, ltrace, uftrace, lcov, gcov, llvm-cov
 
 Just build and run it as you would any other container
 
