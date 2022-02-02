@@ -16,6 +16,7 @@ RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
     && apt-get install -y python3.9 python3.9-dev libpython3.9 libpython3.9-dev \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - \
     && echo deb http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main >> /etc/apt/sources.list \
+    && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && echo deb-src http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main >> /etc/apt/sources.list \
     && apt-get update && \
     apt-get install -y clang-13 clang-tools-13 libc++1-13 libc++-13-dev libc++abi1-13 libc++abi-13-dev libclang1-13 \
